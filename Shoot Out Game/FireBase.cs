@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using FireSharp.Config;
 using FireSharp.Interfaces;
+using FireSharp.Response;
 namespace Shoot_Out_Game
 {
-    class FireBase
+    public class FireBase
     {
+        private const string UserHighscores = "user highscore";
+        public List<DataPackage> highscores;
 
         IFirebaseConfig DatabaseConfig = new FirebaseConfig()
         {
@@ -17,10 +20,7 @@ namespace Shoot_Out_Game
             //password to Firebase Database
             BasePath = "https://zombiehighscore-default-rtdb.europe-west1.firebasedatabase.app/",
             //path to Firebase Database
-
-
         };
-
 
         IFirebaseClient server;
          // function to connect the client to data base
@@ -42,24 +42,39 @@ namespace Shoot_Out_Game
             
         }
 
-        public void SendPackage( string Username, string Score, string Date )
+        public void SendPackage( string Username, int Score, string Date )
         {
             DataPackage package = new DataPackage() {
               username =  Username,
               score = Score,
               date = Date,
             };
-
-            server.Set("user highscore", package);
+            server.Push(UserHighscores, package);
             //Send package to firebase using the connection made before
         }
-        class DataPackage
+
+        public async Task<List<DataPackage>> GetHighScoresAsync()
+        {
+            try
+            {
+                FirebaseResponse response = await server.GetAsync(UserHighscores);
+                //highscores = response.ResultAs<List<DataPackage>>();
+                return response.ResultAs<List<DataPackage>>();
+            }
+            catch
+            {
+                
+            }
+            return null;
+        }
+        public class DataPackage
         {
             public string username  { get; set; }
-            public string score { get; set; }
+            public int score { get; set; }
             public string date { get; set; }
             
         }
 
+        
     }
 }

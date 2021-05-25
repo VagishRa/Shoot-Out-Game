@@ -36,6 +36,10 @@ namespace Shoot_Out_Game
             this.healthBar = new System.Windows.Forms.ProgressBar();
             this.player = new System.Windows.Forms.PictureBox();
             this.GameTimer = new System.Windows.Forms.Timer(this.components);
+            this.HighScoreList = new System.Windows.Forms.ListView();
+            this.StartGame = new System.Windows.Forms.Button();
+            this.ServerConnectionStatus = new System.Windows.Forms.Label();
+            this.UsernameTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.player)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,17 +100,59 @@ namespace Shoot_Out_Game
             this.GameTimer.Interval = 20;
             this.GameTimer.Tick += new System.EventHandler(this.MainTImerEvent);
             // 
+            // HighScoreList
+            // 
+            this.HighScoreList.HideSelection = false;
+            this.HighScoreList.Location = new System.Drawing.Point(415, 128);
+            this.HighScoreList.Name = "HighScoreList";
+            this.HighScoreList.Size = new System.Drawing.Size(121, 97);
+            this.HighScoreList.TabIndex = 4;
+            this.HighScoreList.UseCompatibleStateImageBehavior = false;
+            // 
+            // StartGame
+            // 
+            this.StartGame.Location = new System.Drawing.Point(442, 319);
+            this.StartGame.Name = "StartGame";
+            this.StartGame.Size = new System.Drawing.Size(71, 34);
+            this.StartGame.TabIndex = 5;
+            this.StartGame.Text = "Start";
+            this.StartGame.UseVisualStyleBackColor = true;
+            this.StartGame.Click += new System.EventHandler(this.StartGameButton);
+            // 
+            // ServerConnectionStatus
+            // 
+            this.ServerConnectionStatus.AutoSize = true;
+            this.ServerConnectionStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerConnectionStatus.Location = new System.Drawing.Point(1, 499);
+            this.ServerConnectionStatus.Name = "ServerConnectionStatus";
+            this.ServerConnectionStatus.Size = new System.Drawing.Size(60, 24);
+            this.ServerConnectionStatus.TabIndex = 6;
+            this.ServerConnectionStatus.Text = "label1";
+            // 
+            // UsernameTextBox
+            // 
+            this.UsernameTextBox.Location = new System.Drawing.Point(425, 281);
+            this.UsernameTextBox.Name = "UsernameTextBox";
+            this.UsernameTextBox.Size = new System.Drawing.Size(100, 20);
+            this.UsernameTextBox.TabIndex = 7;
+            // 
             // Form1
             // 
+            this.AcceptButton = this.StartGame;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(924, 661);
+            this.Controls.Add(this.UsernameTextBox);
+            this.Controls.Add(this.ServerConnectionStatus);
+            this.Controls.Add(this.StartGame);
+            this.Controls.Add(this.HighScoreList);
             this.Controls.Add(this.player);
             this.Controls.Add(this.healthBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtScore);
             this.Controls.Add(this.txtAmmo);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyIsDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyIsUp);
@@ -124,6 +170,10 @@ namespace Shoot_Out_Game
         private System.Windows.Forms.ProgressBar healthBar;
         private System.Windows.Forms.PictureBox player;
         private System.Windows.Forms.Timer GameTimer;
+        private System.Windows.Forms.ListView HighScoreList;
+        private System.Windows.Forms.Button StartGame;
+        private System.Windows.Forms.Label ServerConnectionStatus;
+        private System.Windows.Forms.TextBox UsernameTextBox;
     }
 }
 

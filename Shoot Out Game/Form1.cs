@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -6,8 +7,9 @@ namespace Shoot_Out_Game
 {
     public partial class Form1 : Form
     {
-        bool goLeft, goRight, goUp, goDown, gameOver;               //deklarera variablerna
-        string facing = "up";                                        //man börjar titta uppåt
+        bool goLeft, goRight, goUp, goDown, gameOver, gameIsActive;               //deklarera variablerna    
+        string facing = "up";                                      //man börjar titta uppåt
+        string username = "";
         int playerHealth = 100;
         int speed = 10;
         int ammo = 10;
@@ -15,13 +17,35 @@ namespace Shoot_Out_Game
         int score;
         Random randNum = new Random();
         List<PictureBox> zombieList = new List<PictureBox>();                          //skapar list så att man int ebehöver spawna zombies hela tiden
+        FireBase FireBaseConection;
 
         public Form1()
         {
             InitializeComponent();
-            RestartGame();
+            //connecting to database
+            FireBaseConection = new FireBase();
+            ServerConnectionStatus.Text = FireBaseConection.ConnectToDataBase();
+            var test = FireBaseConection.GetHighScoresAsync();
+            var ConvertedDataFromJson = JsonConvert.DeserializeObject<JsonReader>(test);
+            foreach (var user in test)
+            {
+                Console.WriteLine($"Date: {user.date} Username: {user.username} Score:{user.score}");
+            }
+
         }
 
+        public void ShowMainMenu(bool showmenu)
+        {
+            gameIsActive = !showmenu;
+            HighScoreList.Visible = showmenu;
+            HighScoreList.BringToFront();
+            StartGame.Visible = showmenu;
+            StartGame.BringToFront();
+            ServerConnectionStatus.Visible = showmenu;
+            ServerConnectionStatus.BringToFront();
+            UsernameTextBox.Visible = showmenu;
+            UsernameTextBox.BringToFront();
+        }
         private void MainTImerEvent(object sender, EventArgs e)
         {
             txtAmmo.Text = "Ammo: " + ammo;
@@ -34,6 +58,16 @@ namespace Shoot_Out_Game
                 gameOver = true;
                 player.Image = Properties.Resources.dead;           // player dead 
                 GameTimer.Stop();                                     // stop game
+                ShowMainMenu(true);
+                try
+                {
+                    // sending username, score and date to database
+                    FireBaseConection.SendPackage(username, score, DateTime.Now.ToString("MM/dd/yyyy"));
+                }
+                catch
+                {
+
+                }
             }
 
             if (goLeft == true && player.Left > 0) player.Left -= speed;                            //Prevents player from going of screen
@@ -106,55 +140,59 @@ namespace Shoot_Out_Game
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            if(gameOver == true)  return;               // cant press buttons if game is over
-
-            if (e.KeyCode == Keys.Left)                                                      // if key is pressed then do following
-            {   
-                goLeft = true; // change go left to true
-                facing = "left"; //change facing to left
-                player.Image = Properties.Resources.left; // change the player image to LEFT image
-            }
-
-            if (e.KeyCode == Keys.Right)
+            Console.WriteLine("DINA ");
+            if (gameIsActive)
             {
-                goRight = true; // change go right to true
-                facing = "right"; // change facing to right
-                player.Image = Properties.Resources.right; // change the player image to right
-            }
+                if (e.KeyCode == Keys.Left)                                                      // if key is pressed then do following
+                {
+                    goLeft = true; // change go left to true
+                    facing = "left"; //change facing to left
+                    player.Image = Properties.Resources.left; // change the player image to LEFT image
+                }
 
-            if (e.KeyCode == Keys.Up)
-            {
-                facing = "up"; // change facing to up
-                goUp = true; // change go up to true
-                player.Image = Properties.Resources.up; // change the player image to up
-            }
+                if (e.KeyCode == Keys.Right)
+                {
+                    goRight = true; // change go right to true
+                    facing = "right"; // change facing to right
+                    player.Image = Properties.Resources.right; // change the player image to right
+                }
 
-            if (e.KeyCode == Keys.Down)
-            {
-                facing = "down"; // change facing to down
-                goDown = true; // change go down to true
-                player.Image = Properties.Resources.down; //change the player image to down
+                if (e.KeyCode == Keys.Up)
+                {
+                    facing = "up"; // change facing to up
+                    goUp = true; // change go up to true
+                    player.Image = Properties.Resources.up; // change the player image to up
+                }
+
+                if (e.KeyCode == Keys.Down)
+                {
+                    facing = "down"; // change facing to down
+                    goDown = true; // change go down to true
+                    player.Image = Properties.Resources.down; //change the player image to down
+                }
             }
-        }
+        }  
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left) goLeft = false; 
-               
-            if (e.KeyCode == Keys.Right) goRight = false;
-            
-            if (e.KeyCode == Keys.Up) goUp = false;
-            
-            if (e.KeyCode == Keys.Down) goDown = false;
-            
-            if(e.KeyCode == Keys.Space && ammo > 0 && gameOver == false)             // only able to shoot if ammo >0                                                // shoot a bullet in facing direction, with space
-            {   
-                ammo--;                                                                // reduce ammo for every shot
-                ShootBullet(facing);
-                if(ammo < 1) DropAmmo();                                           // spawn ammo if ammo is equal to 0               
-            }
+            Console.WriteLine("DINA ");
+            if (gameIsActive)
+            {
+                if (e.KeyCode == Keys.Left) goLeft = false;
 
-            if( e.KeyCode == Keys.Enter && gameOver == true) RestartGame();         // restart game on enter
+                if (e.KeyCode == Keys.Right) goRight = false;
+
+                if (e.KeyCode == Keys.Up) goUp = false;
+
+                if (e.KeyCode == Keys.Down) goDown = false;
+
+                if (e.KeyCode == Keys.Space && ammo > 0 && gameOver == false)             // only able to shoot if ammo >0                                                // shoot a bullet in facing direction, with space
+                {
+                    ammo--;                                                                // reduce ammo for every shot
+                    ShootBullet(facing);
+                    if (ammo < 1) DropAmmo();                                           // spawn ammo if ammo is equal to 0               
+                }
+            }
         }
 
         private void ShootBullet(string direction)                             // shooting bullet                                // funtion for shooting a bullet
@@ -178,6 +216,7 @@ namespace Shoot_Out_Game
             this.Controls.Add(zombie);                              //adds zombie to frame
             player.BringToFront();                                      // keeps player on top of zombies.
         }
+
         private void DropAmmo()                             // dropping ammo
         {
             PictureBox ammo = new PictureBox();
@@ -205,11 +244,24 @@ namespace Shoot_Out_Game
             goLeft = false;
             goRight = false;
             gameOver = false;
+            gameIsActive = true;
             playerHealth = 100;
             ammo = 10;
             score = 0;
             GameTimer.Start();
         }
+        //start game button
+        private void StartGameButton(object sender, EventArgs e)
+        {   
 
+            if(UsernameTextBox.Text.Length < 1) ServerConnectionStatus.Text = "Enter username with atleast 1 character!";
+            
+            else
+            {
+                username = UsernameTextBox.Text;
+                RestartGame();
+                ShowMainMenu(false);
+            }
+        }
     }
 }
