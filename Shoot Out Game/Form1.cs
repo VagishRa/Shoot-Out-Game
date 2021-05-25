@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Shoot_Out_Game
 {
     public partial class Form1 : Form
     {
-
         bool goLeft, goRight, goUp, goDown, gameOver;               //deklarera variablerna
         string facing = "up";                                        //man börjar titta uppåt
         int playerHealth = 100;
@@ -21,10 +14,8 @@ namespace Shoot_Out_Game
         int zombieSpeed = 3;
         int score;
         Random randNum = new Random();
-
         List<PictureBox> zombieList = new List<PictureBox>();                          //skapar list så att man int ebehöver spawna zombies hela tiden
 
-        
         public Form1()
         {
             InitializeComponent();
@@ -33,44 +24,28 @@ namespace Shoot_Out_Game
 
         private void MainTImerEvent(object sender, EventArgs e)
         {
-            if (playerHealth > 1)                                                         //Stopping crashes when healthbar goes below 0
-            {
-                healthBar.Value = playerHealth;
-            }
+            txtAmmo.Text = "Ammo: " + ammo;
+            txtScore.Text = "Kills: " + score;
+
+            if (playerHealth > 1) healthBar.Value = playerHealth;                                                        //Stopping crashes when healthbar goes below 0                        
+
             else
             {
                 gameOver = true;
                 player.Image = Properties.Resources.dead;           // player dead 
                 GameTimer.Stop();                                     // stop game
-
             }
 
-            txtAmmo.Text = "Ammo: " + ammo;
-            txtScore.Text = "Kills: " + score;
+            if (goLeft == true && player.Left > 0) player.Left -= speed;                            //Prevents player from going of screen
+                   
+            if( goRight == true && player.Left + player.Width < this.ClientSize.Width) player.Left += speed;           
 
-         
+            if ( goUp == true && player.Top > 0) player.Top -= speed        
 
+            if( goDown== true && player.Top + player.Height < this.ClientSize.Height) player.Top += speed;
+            
 
-            if (goLeft == true && player.Left > 0)                                           //Prevents player from going of screen
-            {
-                player.Left -= speed;
-            }
-
-            if( goRight == true && player.Left + player.Width < this.ClientSize.Width)
-            {
-                player.Left += speed;
-
-            }
-
-            if ( goUp == true && player.Top > 0)
-            {
-                player.Top -= speed;
-            }
-
-            if( goDown== true && player.Top + player.Height < this.ClientSize.Height)
-            {
-                player.Top += speed;
-            }
+            
 
 
             foreach (Control x in this.Controls)                 // loop for if we can collect ammo
@@ -325,7 +300,12 @@ namespace Shoot_Out_Game
         }
 
 
-        private void RestartGame()
+        
+       
+
+
+
+private void RestartGame()
         {
 
             player.Image = Properties.Resources.up;                 //  removing all zombies from the scene
@@ -352,13 +332,25 @@ namespace Shoot_Out_Game
 
 
             playerHealth = 100;
-            score = 0;
+            
             ammo = 10;
 
+
+
+
+          
+
+
+
+
+            score = 0;
+
+
             GameTimer.Start();
-                    
 
 
+
+            
 
 
 
