@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Shoot_Out_Game.FireBase;
 
 namespace Shoot_Out_Game
 {
@@ -25,15 +27,22 @@ namespace Shoot_Out_Game
             //connecting to database
             FireBaseConection = new FireBase();
             ServerConnectionStatus.Text = FireBaseConection.ConnectToDataBase();
-            var test = FireBaseConection.GetHighScoresAsync();
-            var ConvertedDataFromJson = JsonConvert.DeserializeObject<JsonReader>(test);
+            _ = LoadHighScores();
+        }
+
+        private async Task LoadHighScores()
+        {
+
+            var test = await FireBaseConection.GetHighScoresAsync();
+            // var mList = JsonConvert.DeserializeObject<IDictionary<string, DataPackage>>(test);
+
+            //var ConvertedDataFromJson = JsonConvert.DeserializeObject<JsonReader>(test);
             foreach (var user in test)
             {
                 Console.WriteLine($"Date: {user.date} Username: {user.username} Score:{user.score}");
             }
 
         }
-
         public void ShowMainMenu(bool showmenu)
         {
             gameIsActive = !showmenu;

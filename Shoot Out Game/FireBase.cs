@@ -59,7 +59,8 @@ namespace Shoot_Out_Game
             {
                 FirebaseResponse response = await server.GetAsync(UserHighscores);
                 //highscores = response.ResultAs<List<DataPackage>>();
-                return response.ResultAs<List<DataPackage>>();
+                List<DataPackage> result = response.ResultAs<List<DataPackage>>().ToList();
+                return result;
             }
             catch
             {
