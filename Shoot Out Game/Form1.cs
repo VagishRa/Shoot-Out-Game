@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Shoot_Out_Game.FireBase;
@@ -315,6 +316,18 @@ namespace Shoot_Out_Game
                 ShowMainMenu(false);
             }
         }
+        //dictionary, string is for variable name, username & score. datapackage contains the value of username and score
+        private void FindSmallestValue(Dictionary<string,DataPackage>dic)
+        {
+            Dictionary<string, DataPackage> AuthorList = new Dictionary<string, DataPackage>();
+
+            foreach (KeyValuePair<string, DataPackage> author in dic.OrderBy(key => key.Value))
+            {
+                Console.WriteLine("Key: {0}, Value: {1}", author.Key, author.Value);
+            }
+        }
+
+        
     }
 }
 

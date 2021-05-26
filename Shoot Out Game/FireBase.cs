@@ -11,7 +11,8 @@ namespace Shoot_Out_Game
     public class FireBase
     {
         private const string UserHighscores = "Highscores";
-        //creation directionary to store multiple data
+        //creation directionary to store multiple data 
+        //Loadhighscores gets called when we retrieve the variable highscores 
         public Dictionary<string, DataPackage> Highscores => LoadHighScores();
 
         IFirebaseConfig DatabaseConfig = new FirebaseConfig()
@@ -35,7 +36,6 @@ namespace Shoot_Out_Game
 
             catch
             {
-                
                 return "A problem occoured connecting to the server";
             }
         }
@@ -51,7 +51,7 @@ namespace Shoot_Out_Game
             server.Push(UserHighscores, package);
             //Send package to firebase using the connection made before
         }
-        //retrieve highscore
+        //retrieve highscore from data base
         public Dictionary<string, DataPackage> LoadHighScores()
         {
             try
