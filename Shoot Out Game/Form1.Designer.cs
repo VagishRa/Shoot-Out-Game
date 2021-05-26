@@ -102,6 +102,7 @@ namespace Shoot_Out_Game
             // 
             // HighScoreList
             // 
+            this.HighScoreList.BackColor = System.Drawing.SystemColors.MenuBar;
             this.HighScoreList.HideSelection = false;
             this.HighScoreList.Location = new System.Drawing.Point(415, 128);
             this.HighScoreList.Name = "HighScoreList";

@@ -53,6 +53,17 @@ namespace Shoot_Out_Game
             ServerConnectionStatus.BringToFront();
             UsernameTextBox.Visible = showmenu;
             UsernameTextBox.BringToFront();
+            /*
+
+            foreach (KeyValuePair<string, DataPackage> data in Highscores)
+            {
+                ListViewItem lvi = HighScoreList.Items.Add("");
+                string temp = string.Join(", ", data.Value.username);
+                temp = string.Join(", ", data.Value.score);
+                temp = string.Join(", ", data.Value.date);
+                lvi.SubItems.Add(temp);
+            }
+            */
         }
 
         private void MainTimerEvent(object sender, EventArgs e)
@@ -70,17 +81,17 @@ namespace Shoot_Out_Game
                 // stop game
                 GameTimer.Stop();
                 ShowMainMenu(true);
-                if (Highscores.First().Value.score < score || Highscores.Count() < 5 )
-                {
-                    if (Highscores.Count() >= 5) Highscores.Remove(Highscores.Keys.First());
 
-                    try
+                try
+                {
+                    if (Highscores.First().Value.score < score || Highscores.Count() < 5)
                     {
+                        if (Highscores.Count() >= 5) Highscores.Remove(Highscores.Keys.First());
                         // sending username, score and date to database
                         FireBaseConection.SendPackage(username, score, DateTime.Now.ToString("MM/dd/yyyy"));
                     }
-                    catch { }
                 }
+                catch { }
             }
 
             //Prevents player from going of screen
@@ -320,12 +331,17 @@ namespace Shoot_Out_Game
             }
         }
         //dictionary, string is for variable name, username & score. datapackage contains the value of username and score
-        private Dictionary<string, DataPackage> SortDictionary(Dictionary<string,DataPackage>dic)
+        private Dictionary<string, DataPackage> SortDictionary(Dictionary<string, DataPackage> dic)
         {
             Dictionary<string, DataPackage> result = new Dictionary<string, DataPackage>();
 
             //sorting mechanism
-            foreach (KeyValuePair<string, DataPackage> data in dic.OrderBy(key => key.Value.score)) result.Add(null, data.Value);
+            int i = 0;
+            try
+            {
+                foreach (KeyValuePair<string, DataPackage> data in dic.OrderBy(key => key.Value.score)) result.Add(i++.ToString(), data.Value);
+            }
+            catch { }
             return result;
         }
     }
