@@ -22,6 +22,7 @@ namespace Shoot_Out_Game
         int score;
         Random randNum = new Random();
         List<PictureBox> zombieList = new List<PictureBox>();
+        Dictionary<string, DataPackage> Highscores = new Dictionary<string,DataPackage>();
         //creation of list so that zombie
         FireBase FireBaseConection;
 
@@ -32,7 +33,8 @@ namespace Shoot_Out_Game
             FireBaseConection = new FireBase();
             ServerConnectionStatus.Text = FireBaseConection.ConnectToDataBase();
 
-            var Highscores = FireBaseConection.Highscores;
+            //sorts the dictionary before it prints out, smallest to largest
+            Highscores = SortDictionary(FireBaseConection.Highscores);
 
             if (Highscores != null)
                 foreach (var user in Highscores)
@@ -68,15 +70,16 @@ namespace Shoot_Out_Game
                 // stop game
                 GameTimer.Stop();
                 ShowMainMenu(true);
-
-                try
+                if (Highscores.First().Value.score < score || Highscores.Count() < 5 )
                 {
-                    // sending username, score and date to database
-                    FireBaseConection.SendPackage(username, score, DateTime.Now.ToString("MM/dd/yyyy"));
-                }
-                catch
-                {
+                    if (Highscores.Count() >= 5) Highscores.Remove(Highscores.Keys.First());
 
+                    try
+                    {
+                        // sending username, score and date to database
+                        FireBaseConection.SendPackage(username, score, DateTime.Now.ToString("MM/dd/yyyy"));
+                    }
+                    catch { }
                 }
             }
 
@@ -317,17 +320,14 @@ namespace Shoot_Out_Game
             }
         }
         //dictionary, string is for variable name, username & score. datapackage contains the value of username and score
-        private void FindSmallestValue(Dictionary<string,DataPackage>dic)
+        private Dictionary<string, DataPackage> SortDictionary(Dictionary<string,DataPackage>dic)
         {
-            Dictionary<string, DataPackage> AuthorList = new Dictionary<string, DataPackage>();
+            Dictionary<string, DataPackage> result = new Dictionary<string, DataPackage>();
 
-            foreach (KeyValuePair<string, DataPackage> author in dic.OrderBy(key => key.Value))
-            {
-                Console.WriteLine("Key: {0}, Value: {1}", author.Key, author.Value);
-            }
+            //sorting mechanism
+            foreach (KeyValuePair<string, DataPackage> data in dic.OrderBy(key => key.Value.score)) result.Add(null, data.Value);
+            return result;
         }
-
-        
     }
 }
 
