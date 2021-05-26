@@ -11,6 +11,7 @@ namespace Shoot_Out_Game
     public class FireBase
     {
         private const string UserHighscores = "Highscores";
+        //creation directionary to store multiple data
         public Dictionary<string, DataPackage> Highscores => LoadHighScores();
 
         IFirebaseConfig DatabaseConfig = new FirebaseConfig()
@@ -50,7 +51,7 @@ namespace Shoot_Out_Game
             server.Push(UserHighscores, package);
             //Send package to firebase using the connection made before
         }
-
+        //retrieve highscore
         public Dictionary<string, DataPackage> LoadHighScores()
         {
             try

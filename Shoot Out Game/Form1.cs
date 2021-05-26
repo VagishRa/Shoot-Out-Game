@@ -12,7 +12,7 @@ namespace Shoot_Out_Game
     {
         bool goLeft, goRight, goUp, goDown, gameOver, gameIsActive;
         string facing = "up";
-        //man börjar titta uppåt
+        //facing start direction uppwards
         string username = "";
         int playerHealth = 100;
         int speed = 10;
@@ -21,7 +21,7 @@ namespace Shoot_Out_Game
         int score;
         Random randNum = new Random();
         List<PictureBox> zombieList = new List<PictureBox>();
-        //skapar list så att man int ebehöver spawna zombies hela tiden
+        //creation of list so that zombie
         FireBase FireBaseConection;
 
         public Form1()
@@ -38,6 +38,7 @@ namespace Shoot_Out_Game
                     Console.WriteLine($"Date: {user.Value.date} Username: {user.Value.username} Score:{user.Value.score}");
         }
 
+        //function to show and hide game menu
         public void ShowMainMenu(bool showmenu)
         {
             gameIsActive = !showmenu;
@@ -164,7 +165,6 @@ namespace Shoot_Out_Game
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("DINA ");
             if (gameIsActive)
             {
                 if (e.KeyCode == Keys.Left)                                                      
@@ -204,7 +204,6 @@ namespace Shoot_Out_Game
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("DINA ");
             if (gameIsActive)
             {
                 if (e.KeyCode == Keys.Left) goLeft = false;
@@ -239,7 +238,8 @@ namespace Shoot_Out_Game
             shootBullet.bulletTop = player.Top + (player.Height / 2);
             shootBullet.MakeBullet(this);
         }
-
+           
+        //make zombies function
         private void MakeZombies()
         {
             PictureBox zombie = new PictureBox();
@@ -284,9 +284,9 @@ namespace Shoot_Out_Game
             foreach (PictureBox i in zombieList) this.Controls.Remove(i);                    
             // remove zombies from list
             zombieList.Clear();                                             
+            
             // CREATE 3 ZOMBIES
-
-            for (int i = 0; i < 3; i++) MakeZombies();
+            for (int i = 0; i < 3; i++) MakeZombies(); 
 
             goUp = false;                                         
             //reseting values. 
@@ -305,9 +305,11 @@ namespace Shoot_Out_Game
         {
 
             if (UsernameTextBox.Text.Length < 1) ServerConnectionStatus.Text = "Enter username with atleast 1 character!";
+            //if user only enter username with 1 letter
 
             else
             {
+                // correct username, save username and restart game
                 username = UsernameTextBox.Text;
                 RestartGame();
                 ShowMainMenu(false);
