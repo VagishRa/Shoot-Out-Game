@@ -36,10 +36,10 @@ namespace Shoot_Out_Game
             this.healthBar = new System.Windows.Forms.ProgressBar();
             this.player = new System.Windows.Forms.PictureBox();
             this.GameTimer = new System.Windows.Forms.Timer(this.components);
-            this.HighScoreList = new System.Windows.Forms.ListView();
             this.StartGame = new System.Windows.Forms.Button();
             this.ServerConnectionStatus = new System.Windows.Forms.Label();
             this.UsernameTextBox = new System.Windows.Forms.TextBox();
+            this.ScoreBoard = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.player)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,16 +100,6 @@ namespace Shoot_Out_Game
             this.GameTimer.Interval = 20;
             this.GameTimer.Tick += new System.EventHandler(this.MainTimerEvent);
             // 
-            // HighScoreList
-            // 
-            this.HighScoreList.BackColor = System.Drawing.SystemColors.MenuBar;
-            this.HighScoreList.HideSelection = false;
-            this.HighScoreList.Location = new System.Drawing.Point(415, 128);
-            this.HighScoreList.Name = "HighScoreList";
-            this.HighScoreList.Size = new System.Drawing.Size(121, 97);
-            this.HighScoreList.TabIndex = 4;
-            this.HighScoreList.UseCompatibleStateImageBehavior = false;
-            // 
             // StartGame
             // 
             this.StartGame.Location = new System.Drawing.Point(442, 319);
@@ -137,6 +127,14 @@ namespace Shoot_Out_Game
             this.UsernameTextBox.Size = new System.Drawing.Size(100, 20);
             this.UsernameTextBox.TabIndex = 7;
             // 
+            // ScoreBoard
+            // 
+            this.ScoreBoard.FormattingEnabled = true;
+            this.ScoreBoard.Location = new System.Drawing.Point(404, 128);
+            this.ScoreBoard.Name = "ScoreBoard";
+            this.ScoreBoard.Size = new System.Drawing.Size(120, 95);
+            this.ScoreBoard.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AcceptButton = this.StartGame;
@@ -144,10 +142,10 @@ namespace Shoot_Out_Game
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(924, 661);
+            this.Controls.Add(this.ScoreBoard);
             this.Controls.Add(this.UsernameTextBox);
             this.Controls.Add(this.ServerConnectionStatus);
             this.Controls.Add(this.StartGame);
-            this.Controls.Add(this.HighScoreList);
             this.Controls.Add(this.player);
             this.Controls.Add(this.healthBar);
             this.Controls.Add(this.label2);
@@ -171,10 +169,10 @@ namespace Shoot_Out_Game
         private System.Windows.Forms.ProgressBar healthBar;
         private System.Windows.Forms.PictureBox player;
         private System.Windows.Forms.Timer GameTimer;
-        private System.Windows.Forms.ListView HighScoreList;
         private System.Windows.Forms.Button StartGame;
         private System.Windows.Forms.Label ServerConnectionStatus;
         private System.Windows.Forms.TextBox UsernameTextBox;
+        private System.Windows.Forms.ListBox ScoreBoard;
     }
 }
 
