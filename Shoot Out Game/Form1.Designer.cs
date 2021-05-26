@@ -98,7 +98,7 @@ namespace Shoot_Out_Game
             // 
             this.GameTimer.Enabled = true;
             this.GameTimer.Interval = 20;
-            this.GameTimer.Tick += new System.EventHandler(this.MainTImerEvent);
+            this.GameTimer.Tick += new System.EventHandler(this.MainTimerEvent);
             // 
             // HighScoreList
             // 

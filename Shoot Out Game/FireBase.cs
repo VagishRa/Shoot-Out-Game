@@ -10,72 +10,66 @@ namespace Shoot_Out_Game
 {
     public class FireBase
     {
-        private const string UserHighscores = "user highscore";
-        public List<DataPackage> highscores;
+        private const string UserHighscores = "Highscores";
+        public Dictionary<string, DataPackage> Highscores => LoadHighScores();
 
         IFirebaseConfig DatabaseConfig = new FirebaseConfig()
         {
             // this will act as a (password) to the firebase database
             AuthSecret = "eQyTMuf12vPtRnLepXa0gWrKZbpL6tk8u7okkw56",
             //password to Firebase Database
-            BasePath = "https://zombiehighscore-default-rtdb.europe-west1.firebasedatabase.app/",
+            BasePath = "https://zombiehighscore-default-rtdb.europe-west1.firebasedatabase.app/"
             //path to Firebase Database
         };
 
         IFirebaseClient server;
-         // function to connect the client to data base
+        // function to connect the client to data base
         public string ConnectToDataBase()
         {
-
             try
             {
                 server = new FireSharp.FirebaseClient(DatabaseConfig);
                 return "Server connection succesfull";
             }
 
-            catch 
+            catch
             {
-                // todo add later
+                
                 return "A problem occoured connecting to the server";
-
             }
-            
         }
 
-        public void SendPackage( string Username, int Score, string Date )
+        public void SendPackage(string Username, int Score, string Date)
         {
-            DataPackage package = new DataPackage() {
-              username =  Username,
-              score = Score,
-              date = Date,
+            DataPackage package = new DataPackage()
+            {
+                username = Username,
+                score = Score,
+                date = Date,
             };
             server.Push(UserHighscores, package);
             //Send package to firebase using the connection made before
         }
 
-        public async Task<List<DataPackage>> GetHighScoresAsync()
+        public Dictionary<string, DataPackage> LoadHighScores()
         {
             try
             {
-                FirebaseResponse response = await server.GetAsync(UserHighscores);
-                //highscores = response.ResultAs<List<DataPackage>>();
-                List<DataPackage> result = response.ResultAs<List<DataPackage>>().ToList();
-                return result;
+                FirebaseResponse respone = server.Get(UserHighscores);
+                return respone.ResultAs<Dictionary<string, DataPackage>>();
             }
             catch
             {
-                
+                return null;
             }
-            return null;
-        }
-        public class DataPackage
-        {
-            public string username  { get; set; }
-            public int score { get; set; }
-            public string date { get; set; }
-            
         }
 
-        
+        public class DataPackage
+        {
+            public string username { get; set; }
+            public int score { get; set; }
+            public string date { get; set; }
+        }
     }
 }
+
