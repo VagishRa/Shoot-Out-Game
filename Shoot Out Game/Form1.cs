@@ -13,15 +13,16 @@ namespace Shoot_Out_Game
         //facing start direction uppwards
         string username = "";
         int playerHealth = 100;
-        int speed = 10;
+        readonly int speed = 10;
         int ammo = 10;
-        int zombieSpeed = 3;
+        readonly int zombieSpeed = 3;
         int score;
-        Random randNum = new Random();
-        List<PictureBox> zombieList = new List<PictureBox>();
+        readonly Random randNum = new Random();
+        readonly List<PictureBox> zombieList = new List<PictureBox>();
         Dictionary<string, DataPackage> Highscores = new Dictionary<string, DataPackage>();
+
         //creation of list so that zombie
-        FireBase FireBaseConection;
+        readonly FireBase FireBaseConection;
 
         public Form1()
         {
@@ -34,7 +35,7 @@ namespace Shoot_Out_Game
 
             if (Highscores != null)
                 foreach (var user in Highscores)
-                    Console.WriteLine($"Date: {user.Value.date} Username: {user.Value.username} Score:{user.Value.score}");
+                    Console.WriteLine($"Date: {user.Value.Date} Username: {user.Value.Username} Score:{user.Value.Score}");
         }
 
         //function to show and hide game menu
@@ -72,15 +73,15 @@ namespace Shoot_Out_Game
                 GameTimer.Stop();
                 try
                 {
-                    if (Highscores.Count() < 5 || Highscores.First().Value.score < score)
+                    if (Highscores.Count() < 5 || Highscores.First().Value.Score < score)
                     {
                         // sending username, score and date to database
-                        Highscores.Add("UserScore", new DataPackage { username = this.username, score = this.score, date = DateTime.Now.ToString("MM/dd/yyyy") });
+                        Highscores.Add("UserScore", new DataPackage { Username = this.username, Score = this.score, Date = DateTime.Now.ToString("MM/dd/yyyy") });
 
                         FireBaseConection.server.Delete(FireBase.UserHighscores);
                         if (Highscores.Count() >= 6) Highscores.Remove(Highscores.Keys.First());
 
-                        foreach (KeyValuePair<string, DataPackage> data in Highscores) FireBaseConection.SendPackage(data.Value.username, data.Value.score, data.Value.date);
+                        foreach (KeyValuePair<string, DataPackage> data in Highscores) FireBaseConection.SendPackage(data.Value.Username, data.Value.Score, data.Value.Date);
                     }
                 }
                 catch { }
@@ -97,19 +98,19 @@ namespace Shoot_Out_Game
             // loop for if we can collect ammo
             foreach (Control x in this.Controls)
             {
-                if (x is PictureBox && (string)x.Tag == "ammo")
+                if (x is PictureBox box && (string)x.Tag == "ammo")
                 // contact with a picturebox with tag ammo
                 {
                     if (player.Bounds.IntersectsWith(x.Bounds))
                     // if player contacts ammo, then dispose the picturebox and add 5 ammo
                     {
                         this.Controls.Remove(x);
-                        ((PictureBox)x).Dispose();
+                        box.Dispose();
                         ammo += 5;
                     }
                 }
 
-                if (x is PictureBox && (string)x.Tag == "zombie")
+                if (x is PictureBox box1 && (string)x.Tag == "zombie")
                 // using method to direct zombies towards player
                 {
                     if (player.Bounds.IntersectsWith(x.Bounds)) playerHealth -= 1;
@@ -119,7 +120,7 @@ namespace Shoot_Out_Game
                     //if zombie is right of player, zombie go left
                     {
                         x.Left -= zombieSpeed;
-                        ((PictureBox)x).Image = Properties.Resources.zleft;
+                        box1.Image = Properties.Resources.zleft;
                         // zombie moving left sprite
                     }
 
@@ -127,7 +128,7 @@ namespace Shoot_Out_Game
                     //if zombie is left of player, zombie go right
                     {
                         x.Left += zombieSpeed;
-                        ((PictureBox)x).Image = Properties.Resources.zright;
+                        box1.Image = Properties.Resources.zright;
                         // zombie moving right sprite
                     }
 
@@ -135,7 +136,7 @@ namespace Shoot_Out_Game
                     //if zombie is below of player, zombie go up
                     {
                         x.Top -= zombieSpeed;
-                        ((PictureBox)x).Image = Properties.Resources.zup;
+                        box1.Image = Properties.Resources.zup;
                         // zombie moving up sprite
                     }
 
@@ -143,7 +144,7 @@ namespace Shoot_Out_Game
                     //if zombie is over of player, zombie go down
                     {
                         x.Top += zombieSpeed;
-                        ((PictureBox)x).Image = Properties.Resources.zdown;
+                        box1.Image = Properties.Resources.zdown;
                         // zombie moving down sprite
                     }
                 }
@@ -151,7 +152,7 @@ namespace Shoot_Out_Game
                 foreach (Control j in this.Controls)
                 //checking if bullet and zombies are hitting eachother
                 {
-                    if (j is PictureBox && (string)j.Tag == "bullet" && x is PictureBox && (string)x.Tag == "zombie")
+                    if (j is PictureBox box2 && (string)j.Tag == "bullet" && x is PictureBox box3 && (string)x.Tag == "zombie")
                     {
                         if (x.Bounds.IntersectsWith(j.Bounds))
                         // IF BULLET BORDER INTERESECTS WITH ZOMBIE BORDER THEN
@@ -160,10 +161,10 @@ namespace Shoot_Out_Game
                             // ADD SCORE
                             this.Controls.Remove(j);
                             // remove zombie                  
-                            ((PictureBox)j).Dispose();
+                            box2.Dispose();
                             this.Controls.Remove(x);
-                            ((PictureBox)x).Dispose();
-                            zombieList.Remove(((PictureBox)x));
+                            box3.Dispose();
+                            zombieList.Remove(box3);
                             MakeZombies();
                             // MAKE ZOMBIES after killing 1
                         }
@@ -240,24 +241,28 @@ namespace Shoot_Out_Game
         // shooting bullet                                
         // funtion for shooting a bullet
         {
-            Bullet shootBullet = new Bullet();
-            shootBullet.direction = direction;
-            shootBullet.bulletLeft = player.Left + (player.Width / 2);
-            // bullet creates from kiddle of player
-            shootBullet.bulletTop = player.Top + (player.Height / 2);
+            Bullet shootBullet = new Bullet
+            {
+                direction = direction,
+                bulletLeft = player.Left + (player.Width / 2),
+                // bullet creates from kiddle of player
+                bulletTop = player.Top + (player.Height / 2)
+            };
             shootBullet.MakeBullet(this);
         }
 
         //make zombies function
         private void MakeZombies()
         {
-            PictureBox zombie = new PictureBox();
-            zombie.Tag = "zombie";
-            zombie.Image = Properties.Resources.zdown;
-            zombie.Left = randNum.Next(0, 900);
-            // zombie spawns random but not outside frame
-            zombie.Top = randNum.Next(60, 800);
-            zombie.SizeMode = PictureBoxSizeMode.AutoSize;
+            PictureBox zombie = new PictureBox
+            {
+                Tag = "zombie",
+                Image = Properties.Resources.zdown,
+                Left = randNum.Next(0, 900),
+                // zombie spawns random but not outside frame
+                Top = randNum.Next(60, 800),
+                SizeMode = PictureBoxSizeMode.AutoSize
+            };
             //sizing up with picture
             zombieList.Add(zombie);
             // adding zombie to zombielist
@@ -270,10 +275,12 @@ namespace Shoot_Out_Game
         private void DropAmmo()
         // dropping ammo
         {
-            PictureBox ammo = new PictureBox();
-            ammo.Image = Properties.Resources.ammo_Image;
-            //importing ammo pic
-            ammo.SizeMode = PictureBoxSizeMode.AutoSize;
+            PictureBox ammo = new PictureBox
+            {
+                Image = Properties.Resources.ammo_Image,
+                //importing ammo pic
+                SizeMode = PictureBoxSizeMode.AutoSize
+            };
             ammo.Left = randNum.Next(10, this.ClientSize.Width - ammo.Width);
             // ammo does not spawn outside frame
             ammo.Top = randNum.Next(10, this.ClientSize.Height - ammo.Height);
@@ -333,7 +340,7 @@ namespace Shoot_Out_Game
             int i = 0;
             try
             {
-                foreach (KeyValuePair<string, DataPackage> data in dic.OrderBy(key => key.Value.score)) result.Add(i++.ToString(), data.Value);
+                foreach (KeyValuePair<string, DataPackage> data in dic.OrderBy(key => key.Value.Score)) result.Add(i++.ToString(), data.Value);
             }
             catch { }
             return result;
@@ -343,11 +350,11 @@ namespace Shoot_Out_Game
         {
             foreach (KeyValuePair<string, DataPackage> data in Highscores)
             {
-                string temp = $"{data.Value.username}: ";
+                string temp = $"{data.Value.Username}: ";
                 temp = temp.PadRight(10, ' ');
-                temp += $"{data.Value.score} ";
+                temp += $"{data.Value.Score} ";
                 temp = temp.PadRight(5, ' ');
-                temp += $"{data.Value.date}";
+                temp += $"{data.Value.Date}";
 
                 ScoreBoard.Items.Add(temp);
             }

@@ -11,7 +11,7 @@ namespace Shoot_Out_Game
         //Loadhighscores gets called when we retrieve the variable highscores 
         public Dictionary<string, DataPackage> Highscores => LoadHighScores();
 
-        IFirebaseConfig DatabaseConfig = new FirebaseConfig()
+        readonly IFirebaseConfig DatabaseConfig = new FirebaseConfig()
         {
             // this will act as a (password) to the firebase database
             AuthSecret = "eQyTMuf12vPtRnLepXa0gWrKZbpL6tk8u7okkw56",
@@ -40,9 +40,9 @@ namespace Shoot_Out_Game
         {
             DataPackage package = new DataPackage()
             {
-                username = Username,
-                score = Score,
-                date = Date,
+                Username = Username,
+                Score = Score,
+                Date = Date,
             };
             server.Push(UserHighscores, package);
             //Send package to firebase using the connection made before
@@ -63,9 +63,9 @@ namespace Shoot_Out_Game
 
         public class DataPackage
         {
-            public string username { get; set; }
-            public int score { get; set; }
-            public string date { get; set; }
+            public string Username { get; set; }
+            public int Score { get; set; }
+            public string Date { get; set; }
         }
     }
 }
