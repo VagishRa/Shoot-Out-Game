@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Shoot_Out_Game.FireBase;
-
 
 namespace Shoot_Out_Game
 {
@@ -33,9 +30,6 @@ namespace Shoot_Out_Game
             FireBaseConection = new FireBase();
             ServerConnectionStatus.Text = FireBaseConection.ConnectToDataBase();
 
-            //sorts the dictionary before it prints out, smallest to largest
-            Highscores = SortDictionary(FireBaseConection.Highscores);
-
             ShowMainMenu(true);
 
             if (Highscores != null)
@@ -46,6 +40,8 @@ namespace Shoot_Out_Game
         //function to show and hide game menu
         public void ShowMainMenu(bool showmenu)
         {
+            //sorts the dictionary before it prints out, smallest to largest
+            Highscores = SortDictionary(FireBaseConection.Highscores);
             gameIsActive = !showmenu;
             ScoreBoard.Visible = showmenu;
             ScoreBoard.BringToFront();
@@ -54,11 +50,9 @@ namespace Shoot_Out_Game
             ServerConnectionStatus.Visible = showmenu;
             ServerConnectionStatus.BringToFront();
             UsernameTextBox.Visible = showmenu;
+            UsernameTextBox.Text = "";
             UsernameTextBox.BringToFront();
             ScoreBoard.Items.Clear();
-            Console.WriteLine(Highscores.First().Value.score);
-            Console.WriteLine(Highscores.First().Value.score);
-            Console.WriteLine(Highscores.Last().Value.score);
             LoadScoreBoard();
         }
 
@@ -76,18 +70,22 @@ namespace Shoot_Out_Game
                 player.Image = Properties.Resources.dead;
                 // stop game
                 GameTimer.Stop();
-                ShowMainMenu(true);
-
                 try
                 {
                     if (Highscores.Count() < 5 || Highscores.First().Value.score < score)
                     {
                         // sending username, score and date to database
-                        FireBaseConection.SendPackage(username, score, DateTime.Now.ToString("MM/dd/yyyy"));
-                        if (Highscores.Count() >= 5) Highscores.Remove(Highscores.Keys.Last());
+                        Highscores.Add("UserScore", new DataPackage { username = this.username, score = this.score, date = DateTime.Now.ToString("MM/dd/yyyy") });
+
+                        FireBaseConection.server.Delete(FireBase.UserHighscores);
+                        if (Highscores.Count() >= 6) Highscores.Remove(Highscores.Keys.First());
+
+                        foreach (KeyValuePair<string, DataPackage> data in Highscores) FireBaseConection.SendPackage(data.Value.username, data.Value.score, data.Value.date);
                     }
                 }
                 catch { }
+
+                ShowMainMenu(true);
             }
 
             //Prevents player from going of screen
@@ -315,7 +313,7 @@ namespace Shoot_Out_Game
         private void StartGameButton(object sender, EventArgs e)
         {
 
-            if (UsernameTextBox.Text.Length < 1) ServerConnectionStatus.Text = "Enter username with atleast 1 character!";
+            if (UsernameTextBox.Text.Length < 1 && UsernameTextBox.Text.Length > 7) ServerConnectionStatus.Text = "Enter a username between 1 and 7 characters";
             //if user only enter username with 1 letter
 
             else
@@ -345,9 +343,14 @@ namespace Shoot_Out_Game
         {
             foreach (KeyValuePair<string, DataPackage> data in Highscores)
             {
-                ScoreBoard.Items.Add($"{data.Value.username}: {data.Value.score}, {data.Value.date}");
+                string temp = $"{data.Value.username}: ";
+                temp = temp.PadRight(10, ' ');
+                temp += $"{data.Value.score} ";
+                temp = temp.PadRight(5, ' ');
+                temp += $"{data.Value.date}";
+
+                ScoreBoard.Items.Add(temp);
             }
         }
     }
 }
-

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
@@ -10,7 +6,7 @@ namespace Shoot_Out_Game
 {
     public class FireBase
     {
-        private const string UserHighscores = "Highscores";
+        public const string UserHighscores = "Highscores";
         //creation directionary to store multiple data 
         //Loadhighscores gets called when we retrieve the variable highscores 
         public Dictionary<string, DataPackage> Highscores => LoadHighScores();
@@ -24,7 +20,7 @@ namespace Shoot_Out_Game
             //path to Firebase Database
         };
 
-        IFirebaseClient server;
+        public IFirebaseClient server;
         // function to connect the client to data base
         public string ConnectToDataBase()
         {

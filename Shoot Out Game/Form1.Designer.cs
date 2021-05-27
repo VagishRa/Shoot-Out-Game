@@ -129,10 +129,12 @@ namespace Shoot_Out_Game
             // 
             // ScoreBoard
             // 
+            this.ScoreBoard.Font = new System.Drawing.Font("Courier New", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ScoreBoard.FormattingEnabled = true;
-            this.ScoreBoard.Location = new System.Drawing.Point(404, 128);
+            this.ScoreBoard.ItemHeight = 21;
+            this.ScoreBoard.Location = new System.Drawing.Point(261, 88);
             this.ScoreBoard.Name = "ScoreBoard";
-            this.ScoreBoard.Size = new System.Drawing.Size(120, 95);
+            this.ScoreBoard.Size = new System.Drawing.Size(419, 172);
             this.ScoreBoard.TabIndex = 8;
             // 
             // Form1
