@@ -30,6 +30,7 @@ namespace Shoot_Out_Game
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.txtAmmo = new System.Windows.Forms.Label();
             this.txtScore = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -40,6 +41,7 @@ namespace Shoot_Out_Game
             this.ServerConnectionStatus = new System.Windows.Forms.Label();
             this.UsernameTextBox = new System.Windows.Forms.TextBox();
             this.ScoreBoard = new System.Windows.Forms.ListBox();
+            this.Info = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.player)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,7 +88,7 @@ namespace Shoot_Out_Game
             // 
             // player
             // 
-            this.player.Image = global::Shoot_Out_Game.Properties.Resources.up;
+            this.player.Image = ((System.Drawing.Image)(resources.GetObject("player.Image")));
             this.player.Location = new System.Drawing.Point(442, 384);
             this.player.Name = "player";
             this.player.Size = new System.Drawing.Size(71, 100);
@@ -137,6 +139,18 @@ namespace Shoot_Out_Game
             this.ScoreBoard.Size = new System.Drawing.Size(419, 172);
             this.ScoreBoard.TabIndex = 8;
             // 
+            // Info
+            // 
+            this.Info.AllowDrop = true;
+            this.Info.AutoSize = true;
+            this.Info.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Info.ForeColor = System.Drawing.Color.Coral;
+            this.Info.Location = new System.Drawing.Point(353, 277);
+            this.Info.Name = "Info";
+            this.Info.Size = new System.Drawing.Size(66, 24);
+            this.Info.TabIndex = 9;
+            this.Info.Text = "Name:";
+            // 
             // Form1
             // 
             this.AcceptButton = this.StartGame;
@@ -144,6 +158,7 @@ namespace Shoot_Out_Game
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(924, 661);
+            this.Controls.Add(this.Info);
             this.Controls.Add(this.ScoreBoard);
             this.Controls.Add(this.UsernameTextBox);
             this.Controls.Add(this.ServerConnectionStatus);
@@ -175,6 +190,7 @@ namespace Shoot_Out_Game
         private System.Windows.Forms.Label ServerConnectionStatus;
         private System.Windows.Forms.TextBox UsernameTextBox;
         private System.Windows.Forms.ListBox ScoreBoard;
+        private System.Windows.Forms.Label Info;
     }
 }
 

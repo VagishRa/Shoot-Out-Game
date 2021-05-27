@@ -53,6 +53,7 @@ namespace Shoot_Out_Game
             UsernameTextBox.Visible = showmenu;
             UsernameTextBox.Text = "";
             UsernameTextBox.BringToFront();
+            Info.Visible = showmenu;
             ScoreBoard.Items.Clear();
             LoadScoreBoard();
         }
